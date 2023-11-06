@@ -1,8 +1,20 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
+const { Triangle, Circle, Square } = require('./lib/shapes.js');
 
 const questions = [
-  { name: 'text', message: 'Logo text: ' },
+  {
+    name: 'text',
+    message: 'Logo text: ',
+    type: 'input',
+    validate: (text) => {
+      if (text.length > 3) {
+        return 'Please provide a logo text with maximum 3 characters';
+      }
+
+      return true;
+    },
+  },
   { name: 'textColor', message: 'Text color: ' },
   {
     name: 'shape',
@@ -17,7 +29,7 @@ const questions = [
         value: 'circle'
       }, {
         name: 'Square',
-        value: 'Square'
+        value: 'square'
       }
     ],
   },
@@ -26,6 +38,33 @@ const questions = [
 
 function writeToFile(fileName, answers) {
   let svg = '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">';
+
+  switch (answers.shape) {
+    case 'triangle': {
+      const shape = new Triangle();
+      shape.setColor(answers.shapeColor);
+      svg += shape.render();
+      svg += `<text x="150" y="170" font-size="60" text-anchor="middle" fill="${answers.textColor}">${answers.text}</text>`;
+      break;
+    }
+
+    case 'circle': {
+      const shape = new Circle();
+      shape.setColor(answers.shapeColor);
+      svg += shape.render();
+      svg += `<text x="150" y="125" font-size="60" text-anchor="middle" fill="${answers.textColor}">${answers.text}</text>`;
+      break;
+    }
+
+    case 'square': {
+      const shape = new Square();
+      shape.setColor(answers.shapeColor);
+      svg += shape.render();
+      svg += `<text x="150" y="125" font-size="60" text-anchor="middle" fill="${answers.textColor}">${answers.text}</text>`;
+      break;
+    }
+  }
+
   svg += '</svg>';
 
 
